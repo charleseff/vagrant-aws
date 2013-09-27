@@ -113,6 +113,11 @@ module VagrantPlugins
       # @return [bool]
       attr_accessor :terminate_on_shutdown
 
+      # Indicates a list of rsync excludes when syncing folders
+      #
+      # @return [Array<String>]
+      attr_accessor :rsync_excludes
+
       def initialize(region_specific=false)
         @access_key_id          = UNSET_VALUE
         @ami                    = UNSET_VALUE
@@ -135,6 +140,7 @@ module VagrantPlugins
         @iam_instance_profile_arn  = UNSET_VALUE
         @iam_instance_profile_name = UNSET_VALUE
         @terminate_on_shutdown  = UNSET_VALUE
+        @rsync_excludes         = UNSET_VALUE
 
         # Internal state (prefix with __ so they aren't automatically
         # merged)
@@ -257,6 +263,8 @@ module VagrantPlugins
 
         # default false
         @terminate_on_shutdown = false if @terminate_on_shutdown == UNSET_VALUE
+
+        @rsync_excludes = [] if @rsync_excludes == UNSET_VALUE
 
         # Compile our region specific configurations only within
         # NON-REGION-SPECIFIC configurations.

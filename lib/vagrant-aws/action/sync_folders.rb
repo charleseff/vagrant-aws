@@ -58,7 +58,7 @@ module VagrantPlugins
             # Rsync over to the guest path using the SSH info
             command = [
               "rsync", "--verbose", "--archive", "-z",
-              "--exclude", ".vagrant/",
+              "--exclude", ".vagrant/"] + rsync_additional_excludes(env) + [
               "-e", "ssh -p #{ssh_info[:port]} -o StrictHostKeyChecking=no -i '#{ssh_info[:private_key_path]}'",
               hostpath,
               "#{ssh_info[:username]}@#{ssh_info[:host]}:#{guestpath}"]
@@ -71,6 +71,12 @@ module VagrantPlugins
                 :stderr => r.stderr
             end
           end
+        end
+
+        private
+        def rsync_additional_excludes(env)
+          region_config = env[:machine].provider_config.get_region_config(env[:machine].provider_config.region)
+          region_config.rsync_excludes.map{|exclude| ['--exclude', exclude]}.flatten
         end
       end
     end
