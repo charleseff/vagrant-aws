@@ -118,6 +118,15 @@ module VagrantPlugins
       # @return [Array<String>]
       attr_accessor :rsync_excludes
 
+      # Specifies which address to connect to with ssh
+      # Must be one of:
+      #  - :public_ip_address
+      #  - :dns_name
+      #  - :private_ip_address
+      #
+      # @return [Symbol]
+      attr_accessor :ssh_host_attribute
+
       def initialize(region_specific=false)
         @access_key_id          = UNSET_VALUE
         @ami                    = UNSET_VALUE
@@ -141,6 +150,7 @@ module VagrantPlugins
         @iam_instance_profile_name = UNSET_VALUE
         @terminate_on_shutdown  = UNSET_VALUE
         @rsync_excludes         = UNSET_VALUE
+        @ssh_host_attribute     = UNSET_VALUE
 
         # Internal state (prefix with __ so they aren't automatically
         # merged)
@@ -265,6 +275,9 @@ module VagrantPlugins
         @terminate_on_shutdown = false if @terminate_on_shutdown == UNSET_VALUE
 
         @rsync_excludes = [] if @rsync_excludes == UNSET_VALUE
+
+        # default to nil
+        @ssh_host_attribute = nil if @ssh_host_attribute == UNSET_VALUE
 
         # Compile our region specific configurations only within
         # NON-REGION-SPECIFIC configurations.
